@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class BounceFrame extends JFrame {
     private BallCanvas canvas;
-    public static final int WIDTH = 600;
-    public static final int HEIGHT = 600;
+    public static final int WIDTH = 750;
+    public static final int HEIGHT = 750;
 
     private ArrayList<JLabel> potLabels = new ArrayList<>();
 
@@ -27,6 +27,7 @@ public class BounceFrame extends JFrame {
         JButton buttonRedBall = new JButton("Create red ball");
         JButton buttonBlueBall = new JButton("Create blue ball");
         JButton buttonBlueRedBalls = new JButton("Red/Blue balls experiment");
+        JButton buttonJoin = new JButton("Join experiment");
 
         buttonRedBall.addActionListener(e -> {
             Ball b = new Ball(canvas, Color.RED);
@@ -59,11 +60,11 @@ public class BounceFrame extends JFrame {
         });
 
         buttonBlueRedBalls.addActionListener(e -> {
-            Ball rb = new Ball(canvas, Color.RED, 50, 50);
+            Ball rb = new Ball(canvas, Color.RED, 200, 200);
 
             ArrayList<Thread> threads = new ArrayList<>();
             for (int i = 0; i < 1000; i ++){
-                Ball bb = new Ball(canvas, Color.BLUE, 50 ,50);
+                Ball bb = new Ball(canvas, Color.BLUE, 200 ,200);
                 canvas.addBall(bb);
                 threads.add(new BallThread(bb, Thread.MIN_PRIORITY));
             }
@@ -76,6 +77,24 @@ public class BounceFrame extends JFrame {
             new BallThread(rb, Thread.MAX_PRIORITY).start();
         });
 
+        buttonJoin.addActionListener(e -> {
+            Ball firstBall = new Ball(canvas, Color.MAGENTA, 50, 50);
+            Ball secondBall = new Ball(canvas, Color.ORANGE, 50, 50);
+            Ball thirdBall = new Ball(canvas, Color.YELLOW, 50, 50);
+
+            canvas.addBall(firstBall);
+            canvas.addBall(secondBall);
+            canvas.addBall(thirdBall);
+
+            BallThread firstThread = new BallThread(firstBall, Thread.NORM_PRIORITY);
+            BallThread secondThread = new BallThread(secondBall, firstThread);
+            BallThread thirdThread = new BallThread(thirdBall, secondThread);
+
+            thirdThread.start();
+            secondThread.start();
+            firstThread.start();
+        });
+
         buttonStop.addActionListener(e -> System.exit(0));
 
         buttonPanel.add(buttonStart);
@@ -83,6 +102,7 @@ public class BounceFrame extends JFrame {
         buttonPanel.add(buttonRedBall);
         buttonPanel.add(buttonBlueBall);
         buttonPanel.add(buttonBlueRedBalls);
+        buttonPanel.add(buttonJoin);
 
         content.add(buttonPanel, BorderLayout.SOUTH);
         content.add(addTextFields(), BorderLayout.NORTH);
