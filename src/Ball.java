@@ -11,9 +11,11 @@ public class Ball {
     private int dx = 2;
     private int dy = 2;
 
+    Color ballColor;
 
-    public Ball(BallCanvas c){
+    public Ball(BallCanvas c, Color ballColor){
         this.canvas = c;
+        this.ballColor = ballColor;
 
 
         if(Math.random()<0.5){
@@ -25,8 +27,16 @@ public class Ball {
         }
     }
 
+    public Ball(BallCanvas c, Color ballColor, int x, int y) {
+        this.canvas = c;
+        this.ballColor = ballColor;
+
+        this.x = x;
+        this.y = y;
+    }
+
     public void draw (Graphics2D g2){
-        g2.setColor(Color.darkGray);
+        g2.setColor(ballColor);
         g2.fill(new Ellipse2D.Double(x,y,XSIZE,YSIZE));
     }
 

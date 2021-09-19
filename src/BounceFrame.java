@@ -24,21 +24,65 @@ public class BounceFrame extends JFrame {
         buttonPanel.setBackground(Color.lightGray);
         JButton buttonStart = new JButton("Start");
         JButton buttonStop = new JButton("Stop");
+        JButton buttonRedBall = new JButton("Create red ball");
+        JButton buttonBlueBall = new JButton("Create blue ball");
+        JButton buttonBlueRedBalls = new JButton("Red/Blue balls experiment");
 
-        buttonStart.addActionListener(e -> {
-            Ball b = new Ball(canvas);
+        buttonRedBall.addActionListener(e -> {
+            Ball b = new Ball(canvas, Color.RED);
             canvas.addBall(b);
 
-            BallThread thread = new BallThread(b);
+            BallThread thread = new BallThread(b, Thread.MAX_PRIORITY);
             thread.start();
             System.out.println("Thread name = " +
                     thread.getName());
+        });
+
+        buttonBlueBall.addActionListener(e -> {
+            Ball b = new Ball(canvas, Color.BLUE);
+            canvas.addBall(b);
+
+            BallThread thread = new BallThread(b, Thread.MIN_PRIORITY);
+            thread.start();
+            System.out.println("Thread name = " +
+                    thread.getName());
+        });
+
+        buttonStart.addActionListener(e -> {
+            Ball b = new Ball(canvas, Color.BLACK);
+            canvas.addBall(b);
+
+            BallThread thread = new BallThread(b, Thread.NORM_PRIORITY);
+            thread.start();
+            System.out.println("Thread name = " +
+                    thread.getName());
+        });
+
+        buttonBlueRedBalls.addActionListener(e -> {
+            Ball rb = new Ball(canvas, Color.RED, 50, 50);
+
+            ArrayList<Thread> threads = new ArrayList<>();
+            for (int i = 0; i < 1000; i ++){
+                Ball bb = new Ball(canvas, Color.BLUE, 50 ,50);
+                canvas.addBall(bb);
+                threads.add(new BallThread(bb, Thread.MIN_PRIORITY));
+            }
+
+            canvas.addBall(rb);
+            for (Thread thread : threads){
+                thread.start();
+            }
+
+            new BallThread(rb, Thread.MAX_PRIORITY).start();
         });
 
         buttonStop.addActionListener(e -> System.exit(0));
 
         buttonPanel.add(buttonStart);
         buttonPanel.add(buttonStop);
+        buttonPanel.add(buttonRedBall);
+        buttonPanel.add(buttonBlueBall);
+        buttonPanel.add(buttonBlueRedBalls);
 
         content.add(buttonPanel, BorderLayout.SOUTH);
         content.add(addTextFields(), BorderLayout.NORTH);

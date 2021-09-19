@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class BallCanvas extends JPanel {
     public ArrayList<Ball> balls = new ArrayList<>();
@@ -19,7 +20,7 @@ public class BallCanvas extends JPanel {
     }
 
     @Override
-    public void paintComponent(Graphics g){
+    public synchronized void paintComponent(Graphics g){
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
 
