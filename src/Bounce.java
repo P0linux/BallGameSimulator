@@ -6,6 +6,8 @@ public class Bounce {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         frame.setVisible(true);
+        frame.addPots();
+
         System.out.println("Thread name = " +
                 Thread.currentThread().getName());
     }

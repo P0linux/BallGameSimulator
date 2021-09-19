@@ -3,7 +3,7 @@ import java.awt.geom.Ellipse2D;
 import java.util.Random;
 
 public class Ball {
-    private Component canvas;
+    private final BallCanvas canvas;
     private static final int XSIZE = 20;
     private static final int YSIZE = 20;
     private int x;
@@ -12,7 +12,7 @@ public class Ball {
     private int dy = 2;
 
 
-    public Ball(Component c){
+    public Ball(BallCanvas c){
         this.canvas = c;
 
 
@@ -25,14 +25,9 @@ public class Ball {
         }
     }
 
-    public static void f(){
-        int a = 0;
-    }
-
     public void draw (Graphics2D g2){
         g2.setColor(Color.darkGray);
         g2.fill(new Ellipse2D.Double(x,y,XSIZE,YSIZE));
-
     }
 
     public void move(){
@@ -55,5 +50,21 @@ public class Ball {
             dy = -dy;
         }
         this.canvas.repaint();
+    }
+
+    public boolean checkOverlap(){
+        for (var pot : canvas.pots){
+            if (this.x >= pot.getX()
+                    && this.y >= pot.getY()
+                    && this.x + XSIZE <= pot.getX() + Pot.SIZE
+                    && this.y + YSIZE <= pot.getY() + Pot.SIZE){
+                synchronized (canvas) {
+                    canvas.removeBall(this);
+                }
+                pot.incrementsCounter();
+                return true;
+            }
+        }
+        return false;
     }
 }
